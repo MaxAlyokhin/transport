@@ -1,0 +1,74 @@
+@import "fonts"
+
+#map
+  height: 100%
+  z-index: 1
+
+.leaflet-pane
+  transition: none
+
+.leaflet-div-icon
+  border: none
+  background: transparent
+
+.marker
+  border-radius: 50%
+  height: 6px !important
+  width: 6px !important
+  background-clip: padding-box
+  display: flex
+  justify-content: center
+  align-items: center
+
+.marker::after
+  background-clip: padding-box
+  background: #fff
+  border: 2px solid #000
+  border-radius: 40px
+  content: ''
+  display: block
+  position: absolute
+  height: 32px
+  width: 32px
+
+.routeNumberOnMarker
+  position: absolute
+  z-index: 10
+  font-family: roboto-mono-regular
+  font-weight: bold
+  font-size: 10px
+
+.azimuthOnMarker
+  position: absolute
+  z-index: 10
+  width: 28px
+  height: 25px
+  border-radius: 50%
+  border-top: 4px solid #000
+
+.red::after
+  background: #ffe4e4
+
+.green::after
+  background: #e9ffe4
+
+.blue::after
+  background: #e7e4ff
+
+.locate
+  position: fixed
+  left: 15px
+  bottom: 15px
+  z-index: 10
+  background: white
+  width: 40px
+  height: 40px
+  border: 2px solid #000
+  border-radius: 50%
+  display: flex
+  justify-content: center
+  align-items: center
+  cursor: pointer
+  img
+    width: 25px
+    transition: all 1000ms cubic-bezier(0.23, 1, 0.32, 1)

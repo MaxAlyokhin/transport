@@ -1,0 +1,33 @@
+{
+  "private": "true",
+  "main": "gulpfile.js",
+  "author": "Max Alyokhin",
+  "license": "MIT",
+  "type": "module",
+  "browserslist": [
+    "last 2 Chrome versions",
+    "last 2 Firefox versions"
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.13.14",
+    "@babel/preset-env": "^7.13.12",
+    "babel-loader": "^8.2.2",
+    "browser-sync": "^2.26.7",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^7.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-imagemin": "^6.1.0",
+    "gulp-livereload": "^4.0.1",
+    "gulp-order": "^1.2.0",
+    "gulp-rigger": "^0.5.8",
+    "gulp-sass": "^4.0.2",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-watch": "^4.2.4",
+    "imagemin-pngquant": "^8.0.0",
+    "node-sass": "^4.13.1",
+    "readable-stream": "^3.4.0",
+    "rimraf": "^3.0.0",
+    "webpack-stream": "^6.1.2",
+    "workbox-build": "^6.1.2"
+  }
+}
