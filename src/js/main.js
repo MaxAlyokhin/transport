@@ -5,4 +5,6 @@ function main() {
   transportSupervisor(updateFrequency)
 }
 
-main()
+window.addEventListener('load', () => {
+  main()
+})

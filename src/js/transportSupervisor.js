@@ -66,5 +66,30 @@ export function transportSupervisor(updateFrequency) {
   }
 
   getTransportData() // Вызываем функцию первый раз
-  setInterval(getTransportData, updateFrequency) // И далее повторяем
+  let getTransportDataInterval = setInterval(getTransportData, updateFrequency) // И далее повторяем
+
+  // Кнопка информации
+  let isInfo = 0 // Маркер отслеживания геопозиции
+  document.querySelector('.info').addEventListener('click', () => {
+    if (!isInfo) {
+      clearInterval(getTransportDataInterval)
+      document.querySelector('.info').style.fontSize = '17px'
+      document.querySelector('.panel').style.display = 'flex'
+      setTimeout(() => {
+        document.querySelector('.panel').style.opacity = 1
+        document.querySelector('.panel').style.transform = 'scale(1) translateY(0)'
+      }, 100)
+
+      isInfo = 1
+    } else {
+      getTransportDataInterval = setInterval(getTransportData, updateFrequency)
+      document.querySelector('.info').style.fontSize = '22px'
+      document.querySelector('.panel').style.opacity = 0
+      document.querySelector('.panel').style.transform = 'scale(0.98) translateY(5px)'
+      setTimeout(() => {
+        document.querySelector('.panel').style.display = 'none'
+      }, 1000)
+      isInfo = 0
+    }
+  })
 }
