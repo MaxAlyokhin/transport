@@ -150,6 +150,12 @@ export function serviceWorker() {
     globDirectory: 'dist',
     globPatterns: ['**/*.{html,js,css}'],
     swDest: 'dist/serviceWorkerForTransport.js',
+    runtimeCaching: [
+      {
+        urlPattern: /\.(?:html|css|js)$/,
+        handler: 'NetworkFirst',
+      },
+    ],
   })
 }
 
