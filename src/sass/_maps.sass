@@ -1,5 +1,8 @@
 @import "fonts"
 
+a
+  color: black
+
 #map
   height: 100%
   z-index: 1
@@ -34,7 +37,7 @@
 .routeNumberOnMarker
   position: absolute
   z-index: 10
-  font-family: roboto-mono-regular
+  font-family: roboto-mono-medium
   font-weight: bold
   font-size: 10px
 
@@ -55,20 +58,94 @@
 .blue::after
   background: #e7e4ff
 
-.locate
+.locate, .info
   position: fixed
-  left: 15px
-  bottom: 15px
+  right: 15px
+  bottom: 30px
   z-index: 10
-  background: white
   width: 40px
   height: 40px
-  border: 2px solid #000
   border-radius: 50%
   display: flex
   justify-content: center
   align-items: center
   cursor: pointer
+  background: #ffffff3d
+  backdrop-filter: blur(12px)
+  box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2)
   img
-    width: 25px
+    width: 20px
     transition: all 1000ms cubic-bezier(0.23, 1, 0.32, 1)
+
+.info
+  right: 70px
+  font-family: roboto-mono-medium
+  font-weight: bold
+  font-size: 19px
+  transition: all 1000ms cubic-bezier(0.23, 1, 0.32, 1)
+
+.panel
+  position: fixed
+  transition: all 1000ms cubic-bezier(0.23, 1, 0.32, 1)
+  font-family: roboto-mono-medium
+  font-size: 10px
+  z-index: 11
+  bottom: 70px
+  right: 0
+  margin: 15px
+  padding: 15px
+  background: #ffffff3d
+  box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2)
+  backdrop-filter: blur(12px)
+  border-radius: 15px
+  align-items: flex-start
+  justify-content: center
+  flex-direction: column
+  line-height: 17px
+  max-width: 420px
+  transform: scale(0.98) translateY(5px)
+  opacity: 0
+  display: none
+  &__container
+    height: 40px
+    display: flex
+    align-items: center
+    padding-left: 15px
+    z-index: 10
+  &__text
+    margin: 10px 0 0 0
+    padding-left: 0
+    z-index: 10
+    img
+      display: inline
+      vertical-align: text-bottom
+
+.type-of-transport
+  padding-left: 35px
+
+.ios
+  .panel
+    backdrop-filter: none
+    padding: 0
+    right: 30px
+    bottom: 85px
+    &__container
+      padding-left: 30px
+    &__text
+      padding-left: 15px
+    &::before
+      content: ''
+      backdrop-filter: blur(12px)
+      position: absolute
+      width: 100%
+      height: 100%
+      border-radius: 15px
+      padding: 15px
+  .locate, .info
+    &::before
+      content: ''
+      backdrop-filter: blur(12px)
+      position: absolute
+      width: 100%
+      height: 100%
+      border-radius: 50%

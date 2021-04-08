@@ -1,51 +1,65 @@
 // Метод получает данные о городском транспорте и парсит их в массивы
 
-import { mapDrawer } from './mapDrawer.js' // Генерирует карту и массив маркеров
-
-export let speedsArray = [] // Глобально объявляем массив скоростей
-export let typeOfTransportArray = [] // Глобально объявляем массив типов транспорта
-export let routesArray = [] // Глобально объявляем массив маршрутов
-export let latitude = [] // Глобально объявляем массив широт
-export let longitude = [] // Глобально объявляем массив долгот
-export let azimuth = [] // Глобально объявляем массив азимутов
+import { mapInit } from './mapDrawer.js' // Инициализация карты
+import { reloadMarkers } from './mapDrawer.js' // Генерирует карту и массив маркеров
 
 export function transportSupervisor(updateFrequency) {
-  let oneCallOfFunction = 0
+  let isMapInit = false // Маркер инициализации карты
 
   async function getTransportData() {
+    // Получаем данные
     let transportServerResponse = await fetch('https://stops.lt/krasnodar/gps.txt')
 
+    // Если HTTP-статус в диапазоне 200-299
     if (transportServerResponse.ok) {
-      // Если HTTP-статус в диапазоне 200-299
       let allTransportData = await transportServerResponse.text() // Прочитать тело ответа как текст
       let allTransportDataArray = allTransportData.split(',') // Парсим текст в массив
 
-      // Собираем по массиву данные, исходя из наличия скорости
-      // В каждой строке 7 элементов, начиная с 4ого каждый 7ой элемент это скорость
-      // Если скорость == '', то пропускаем всю строку
-      // По пути собираем типы транспорта (каждый нулевой элемент)
-      // И номера маршрутов (каждый первый элемент в строке), исключая 4 - это служебные салоны
-      let i = 4
-      let j = 0
+      // Собираем по массиву данные
+      // В каждой строке 7 элементов:
+      // 1 - тип транспорта
+      // 2 - номер маршрута
+      // 3 - широта
+      // 4 - долгота
+      // 5 - скорость
+      // 6 - азимут
+      // 7 - номер салона
 
-      // Проходиим по всем салонам и собираем данные в массивы
-      for (i; i < allTransportDataArray.length; i += 7) {
-        if (allTransportDataArray[i] != '' && allTransportDataArray[i - 4] != 4) {
-          speedsArray[j] = allTransportDataArray[i]
-          typeOfTransportArray[j] = allTransportDataArray[i - 4]
-          routesArray[j] = allTransportDataArray[i - 3]
-          latitude[j] = allTransportDataArray[i - 1] / 1000000 // Делим на миллион, так как исходно данные представлены без запятой
-          longitude[j] = allTransportDataArray[i - 2] / 1000000
-          azimuth[j] = allTransportDataArray[i + 1]
-          j++
+      let typeOfTransportArray = [] // Массив типов транспорта
+      let routesArray = [] // Массив маршрутов
+      let latitudeArray = [] // Массив широт
+      let longitudeArray = [] // Массив долгот
+      let azimuthArray = [] // Массив азимутов
+
+      for (let i = 0; i < allTransportDataArray.length - 1; i += 7) {
+        // 4 это служебные салоны, их исключаем
+        // Также исключаем салоны с неизвестным номером маршрута
+        if (allTransportDataArray[i] != 4 && allTransportDataArray[i + 1] != '') {
+          typeOfTransportArray.push(allTransportDataArray[i])
+          routesArray.push(allTransportDataArray[i + 1])
+          longitudeArray.push(allTransportDataArray[i + 2] / 1000000) // Делим на миллион, так как исходно данные представлены без запятой
+          latitudeArray.push(allTransportDataArray[i + 3] / 1000000)
+          azimuthArray.push(allTransportDataArray[i + 5])
         }
       }
 
-      // По первому приходу данных генерим карту
-      if (oneCallOfFunction == 0) {
-        oneCallOfFunction = 1
-        mapDrawer(updateFrequency)
+      // Упаковываем массивы в объект
+      let dataArrays = {
+        typeOfTransport: typeOfTransportArray,
+        route: routesArray,
+        latitude: latitudeArray,
+        longitude: longitudeArray,
+        azimuth: azimuthArray,
       }
+
+      // Инициализируем карту
+      if (!isMapInit) {
+        mapInit(dataArrays)
+        isMapInit = true
+      }
+
+      // И далее обновляем маркеры по каждому обновлению данных
+      reloadMarkers(dataArrays)
     } else {
       console.log('Ошибка HTTP: ' + transportServerResponse.status)
     }
