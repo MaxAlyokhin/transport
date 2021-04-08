@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" class="">
   <head>
     //= templates/head.html
   </head>
@@ -7,5 +7,36 @@
   <body>
     <div id="map"></div>
     <div class="locate"><img src="img/locate.png" alt="locate" /></div>
+    <div class="info">?</div>
+    <div class="panel">
+      <div class="panel__container">
+        <div class="marker red">
+          <span class="routeNumberOnMarker">4</span>
+          <span class="azimuthOnMarker" style="transform: rotate(45deg)"></span>
+        </div>
+        <span class="type-of-transport">Троллейбус</span>
+      </div>
+      <div class="panel__container">
+        <div class="marker green">
+          <span class="routeNumberOnMarker">96</span>
+          <span class="azimuthOnMarker" style="transform: rotate(45deg)"></span>
+        </div>
+        <span class="type-of-transport">Автобус</span>
+      </div>
+      <div class="panel__container">
+        <div class="marker blue">
+          <span class="routeNumberOnMarker">8</span>
+          <span class="azimuthOnMarker" style="transform: rotate(45deg)"></span>
+        </div>
+        <span class="type-of-transport">Трамвай</span>
+      </div>
+
+      <p class="panel__text">
+        <span>Этот сайт можно установить как нативное приложение — со смартфона нажми на иконку </span><img src="/img/ios-menu.png" style="height: 15px" /><span> в Safari или на </span><img src="img/android-menu.svg" style="height: 15px" /><span>
+          в Chrome, а затем На экран "Домой" (Добавить на главный экран); с десктопа, в зависимости от браузера, в адресной строке появится кнопка "Установить приложение".</span
+        >
+      </p>
+      <p class="panel__text">Исходный код доступен <a href="https://github.com/MaxAlyokhin/transport" target="_blank">здесь</a>.</p>
+    </div>
   </body>
 </html>
