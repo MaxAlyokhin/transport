@@ -40,14 +40,27 @@ export function mapInit(dataArrays) {
   let minLongitude
 
   // Создаём прямоугольник с координатами двух точек и масштабируем так, чтобы обе были видны
-  maxLatitude = Math.max(...dataArrays.latitude)
-  minLatitude = Math.min(...dataArrays.latitude)
-  maxLongitude = Math.max(...dataArrays.longitude)
-  minLongitude = Math.min(...dataArrays.longitude)
+  // В связи с тем, что иногда салоны перегоняют в Москву, лучше сделать фиксированный масштаб
+
+  // Хотя в идеале карта должна масштабироваться динамически вот так:
+  // maxLatitude = Math.max(...dataArrays.latitude)
+  // minLatitude = Math.min(...dataArrays.latitude)
+  // maxLongitude = Math.max(...dataArrays.longitude)
+  // minLongitude = Math.min(...dataArrays.longitude)
+
+  // let bounds = L.latLngBounds([
+  //   [maxLatitude - 0.008, minLongitude + 0.008],
+  //   [minLatitude - 0.008, maxLongitude + 0.008],
+  // ])
+
+  maxLatitude = 45.141714
+  minLatitude = 44.975828
+  maxLongitude = 38.79086
+  minLongitude = 39.228815
 
   let bounds = L.latLngBounds([
-    [maxLatitude - 0.008, minLongitude + 0.008],
-    [minLatitude - 0.008, maxLongitude + 0.008],
+    [maxLatitude, minLongitude],
+    [minLatitude, maxLongitude],
   ])
   map.fitBounds(bounds) // Масштабируем
 }
