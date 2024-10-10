@@ -149,7 +149,7 @@ export function serviceWorker() {
   return workboxBuild.generateSW({
     globDirectory: 'dist',
     globPatterns: ['**/*.{html,js,css}'],
-    swDest: 'dist/serviceWorkerForTransport.js',
+    swDest: 'dist/serviceWorkerForTransportv2.js',
     runtimeCaching: [
       {
         urlPattern: /\.(?:html|css|js)$/,

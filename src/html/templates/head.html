@@ -40,17 +40,17 @@
 <link rel="shortcut icon" href="img/favicons/favicon.ico" />
 
 <link rel="stylesheet" href="libs/leaflet.css" type="text/css" />
-<link rel="stylesheet" href="styles/style.min.css" type="text/css" />
+<link rel="stylesheet" href="styles/style.min.css?v3" type="text/css" />
 
 <script src="libs/current-device.js"></script>
 <script src="libs/leaflet.js"></script>
 <script src="libs/leaflet.slideto.js"></script>
-<script src="scripts/main.min.js"></script>
+<script src="scripts/main.min.js?v3"></script>
 
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/serviceWorkerForTransport.js')
+      navigator.serviceWorker.register('/serviceWorkerForTransportv2.js')
     })
   }
 </script>
