@@ -119,7 +119,7 @@ export function reloadMarkers(dataMap) {
                         html: `
                             <div class="marker ${typeOfTransport}">
                                 <span class="routeNumberOnMarker">${transport.route}</span>
-                                <span class="azimuthOnMarker" style="transform: rotate(${transport.azimuth}deg); ${transport.azimuth === 0 ? 'display: none;' : ''}"></span>
+                                <span class="azimuthOnMarker" style="transform: rotate(${transport.azimuth}deg);"></span>
                             </div>
                         `,
                     }),
@@ -135,6 +135,14 @@ export function reloadMarkers(dataMap) {
         for (let key of dataMap.keys()) {
             const transport = dataMap.get(key)
             if (transportMarkerMap.get(key)) {
+
+
+                if (!transport.azimuth) {
+                    transportMarkerMap.get(key)._icon.querySelector('.azimuthOnMarker').style.display = 'none'
+                } else {
+                    transportMarkerMap.get(key)._icon.querySelector('.azimuthOnMarker').style.transform = `rotate(${transport.azimuth}deg)`
+                }
+
                 // Если пришла слишком большая разница в координатах, то чтобы анимация не поломалась
                 // сразу ставим маркер в новое место
                 if (Math.abs(transport.latitude - transportMarkerMap.get(key)._latlng.lat) >= 0.02) {
