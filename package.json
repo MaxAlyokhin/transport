@@ -29,5 +29,6 @@
     "rimraf": "^3.0.0",
     "webpack-stream": "^6.1.2",
     "workbox-build": "^6.1.2"
-  }
+  },
+  "dependencies": {}
 }

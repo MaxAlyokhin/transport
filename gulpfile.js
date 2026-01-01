@@ -23,7 +23,7 @@ const path = {
     js: 'src/js/**/*.js',
     img: 'src/images/**/*.*',
     fonts: 'src/fonts/**/*.*',
-    libs: 'src/libs/**/*.*',
+    libs: 'src/libs/**/*.js',
   },
   // За изменением каких файлов мы хотим наблюдать:
   watch: {
@@ -32,7 +32,7 @@ const path = {
     js: 'src/js/**/*.js',
     img: 'src/images/**/*.*',
     fonts: 'src/fonts/**/*.*',
-    libs: 'src/libs/**/*.*',
+    libs: 'src/libs/**/*.js',
   },
   // Готовые после сборки файлы переносим сюда:
   dist: {
@@ -67,32 +67,52 @@ function html() {
 }
 
 // Сборка css
-function style() {
-  return src([path.src.sass]) // Путь до исходных файлов в src
-    .pipe(sourcemaps.init()) // Инициализируем sourcemaps
-    .pipe(
-      sass({
-        // Параметры gulp-sass
-        sourceMap: true, // sourcemaps включены
-        errLogToConsole: true, // Пишем логи
-        outputStyle: 'compressed', // Минифицируем
-      })
-    )
+// Компилируем SASS и о��ъединяем с CSS из src/libs в единый бандл
+function streamCompleted(stream) {
+  return new Promise((resolve, reject) => {
+    stream.on('end', resolve)
+    stream.on('error', reject)
+  })
+}
+
+async function style() {
+  const tempName = '__sass.css'
+  const tempPath = path.dist.css + tempName
+
+  // 1) Компилируем SASS во временный файл
+  await streamCompleted(
+    src(path.src.sass)
+      .pipe(
+        sass({
+          errLogToConsole: true,
+          outputStyle: 'compressed',
+        })
+      )
+      .pipe(concat(tempName))
+      .pipe(dest(path.dist.css))
+  )
+
+  // 2) Собираем CSS из libs и скомпилированный SASS в один файл
+  const bundle = src(['src/libs/**/*.css', tempPath])
     .pipe(concat('style.min.css'))
     .pipe(
       autoprefixer({
         grid: true,
         overrideBrowserslist: ['last 10 versions'],
       })
-    ) // Добавляем вендорные префиксы
-    .pipe(sourcemaps.write()) // Прописываем sourcemaps
-    .pipe(dest(path.dist.css)) // Вывод готового в dist
-    .pipe(reload({ stream: true })) // Обновляем сервер
+    )
+    .pipe(dest(path.dist.css))
+    .pipe(reload({ stream: true }))
+
+  // 3) Удаляем временный файл после сборки (без прерывания основного потока)
+  bundle.on('end', () => rimraf(tempPath, () => {}))
+
+  return bundle
 }
 
 // Сборка js
 function js() {
-  return src('src/js/main.js')
+  return src([path.src.libs, 'src/js/main.js'])
     .pipe(
       webpack({
         module: {
@@ -130,13 +150,6 @@ function fonts() {
     .pipe(reload({ stream: true })) // Обновляем сервер
 }
 
-// Перенос библиотек
-function libs() {
-  return src(path.src.libs) // Вход
-    .pipe(dest(path.dist.libs)) // Выход
-    .pipe(reload({ stream: true })) // Обновляем сервер
-}
-
 // Очистка
 function clean(cb) {
   rimraf(path.clean, cb)
@@ -149,7 +162,7 @@ export function serviceWorker() {
   return workboxBuild.generateSW({
     globDirectory: 'dist',
     globPatterns: ['**/*.{html,js,css}'],
-    swDest: 'dist/serviceWorkerForTransportv2.js',
+    swDest: 'dist/serviceWorkerForTransportv3.js',
     runtimeCaching: [
       {
         urlPattern: /\.(?:html|css|js)$/,
@@ -160,17 +173,17 @@ export function serviceWorker() {
 }
 
 // Собрать проект
-export const build = series(clean, html, style, js, image, fonts, libs, serviceWorker)
+export const build = series(clean, html, style, js, image, fonts, serviceWorker)
 
 // По дефолту всё собираем и запускаем сервер
-const _default = series(html, style, image, fonts, libs, js, function () {
+const _default = series(html, style, image, fonts, js, function () {
   browserSync(config)
   watch(path.watch.html, html)
   watch(path.src.sass, style)
+  watch('src/libs/**/*.css', style)
   watch(path.src.js, js)
   watch(path.src.img, image)
   watch(path.src.fonts, fonts)
-  watch(path.src.libs, libs)
 })
 
 export { _default as default }
